@@ -27,3 +27,132 @@ class Mdl(object):
         self.view_bbmax = None
 
         self.flags = None
+
+
+class Mdl_mstudiobone_t(object):
+    """The Mdl mstudiobone_t struct."""
+
+    def __init__(self):
+        self.sznameindex = None
+        self.parent = None
+        self.bonecontroller = [None, None, None, None, None, None]
+
+        self.pos = (None, None, None)
+        self.quat = (None, None, None, None)
+        self.rot = (None, None, None)
+
+        self.posscale = (None, None, None)
+        self.rotscale = (None, None, None)
+
+        self.poseToBone = ((None, None, None, None),
+                           (None, None, None, None),
+                           (None, None, None, None))
+        self.qAlignment = (None, None, None, None)
+        self.flags = None
+        self.proctype = None
+        self.procindex = None
+
+        self.physicsbone = None
+        self.surfacepropidx = None
+        self.unused = [None, None, None, None, None, None, None, None]
+
+
+class Mdl_mstudiobonecontroller(object):
+    """The Mdl mstudiobonecontroller_t struct."""
+
+    def __init__(self):
+        self.placeholder = None
+
+
+class Mdl_mstudiohitboxset_t(object):
+    """The Mdl mstudiohitboxset_t struct."""
+
+    def __init__(self):
+        self.placeholder = None
+
+
+class Mdl_mstudioMouth_t(object):
+    """The Mdl mstudioMouth_t struct."""
+
+    def __init__(self):
+        self.placeholder = None
+
+
+class Mdl_studioloddata_t(object):
+    """The Mdl studioloddata_t struct."""
+
+    def __init__(self):
+        self.placeholder = None
+
+
+class Mdl_mstudioanimdesc_t(object):
+    """The Mdl mstudioanimdesc_t struct."""
+
+    def __init__(self):
+        self.placeholder = None
+
+
+class Mdl_mstudioseqdesc_t(object):
+    """The Mdl mstudioseqdesc_t struct."""
+
+    def __init__(self):
+        self.placeholder = None
+
+
+class Mdl_mstudioposeparamdesc_t(object):
+    """The Mdl mstudioposeparamdesc_t struct."""
+
+    def __init__(self):
+        self.placeholder = None
+
+
+class Mdl_mstudioflexdesc_t(object):
+    """The Mdl mstudioflexdesc_t struct."""
+
+    def __init__(self):
+        self.placeholder = None
+
+
+class Mdl_mstudioflexrule_t(object):
+    """The Mdl mstudioflexrule_t struct."""
+
+    def __init__(self):
+        self.placeholder = None
+
+
+class Mdl_mstudiotexture_t(object):
+    """The Mdl mstudiotexture_t struct."""
+
+    def __init__(self):
+        self.placeholder = None
+
+
+class Mdl_mstudioattachment_t(object):
+    """The Mdl mstudioattachment_t struct."""
+
+    def __init__(self):
+        self.placeholder = None
+
+
+class Mdl_mstudioiklock_t(object):
+    """The Mdl mstudioiklock_t struct."""
+
+    def __init__(self):
+        self.placeholder = None
+
+
+class Mdl_mstudiomodelgroup_t(object):
+    """The Mdl mstudiomodelgroup_t struct."""
+
+    def __init__(self):
+        self.placeholder = None
+
+
+class Mdl_mstudiobodyparts_t(object):
+    """The Mdl mstudiobodyparts_t struct."""
+
+    def __init__(self):
+        self.sznameindex = None
+        self.nummodels = None
+        self.base = None
+        self.modelindex = None
