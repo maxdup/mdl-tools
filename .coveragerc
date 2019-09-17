@@ -1,0 +1,3 @@
+[run]
+source = mdltools/
+omit = mdltools/__init__.py
