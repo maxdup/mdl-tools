@@ -125,6 +125,14 @@ class Mdl_mstudiotexture_t(object):
 
     def __init__(self):
         self.placeholder = None
+        self.sznameindex = None
+        self.pszname = ''
+        self.flags = None
+        self.used = None
+        self.unused1 = None
+        self.material = None
+        self.clientmaterial = None
+        self.unused = None
 
 
 class Mdl_mstudioattachment_t(object):

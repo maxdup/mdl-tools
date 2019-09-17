@@ -12,6 +12,11 @@ from struct import *  # NOQA: E402
 from .mdl import *  # NOQA: E402
 
 
+def readcstr(f):
+    return ''.join(iter(lambda: f.read(1).decode('ascii'), '\x00'))
+
+
+offset = Struct('i')
 studiohdr_t = Struct('<iii64si3f3f3f3f3f3fi43if11icccc5i')
 
 
@@ -78,15 +83,51 @@ def MdlParse(filename):
             mdl.eventsindexed = parsed[35]
 
             # mstudiotexture_t
-            mdl.texture_count = parsed[36]
-            mdl.texture_offset = parsed[37]
+            numtextures = parsed[36]
+            textureindex = parsed[37]
+            mdl.textures = []
 
-            mdl.texturedir_count = parsed[38]
-            mdl.texturedir_offset = parsed[39]
+            f.seek(textureindex)
+            for b in range(0, numtextures):
+                data = f.read(mstudiotexture_t.size)
+                parsed_data = mstudiotexture_t.unpack(data)
+                bone = make_mstudiotexture_t(parsed_data)
+                mdl.textures.append(bone)
 
-            mdl.skinreference_count = parsed[40]
-            mdl.skinrfamily_count = parsed[41]
-            mdl.skinreference_index = parsed[42]
+            for i in range(0, len(mdl.textures)):
+                f.seek(textureindex + mdl.textures[i].sznameindex + i*64)
+                mdl.textures[i].pszName = readcstr(f)
+
+            # texture directories
+            numcdtextures = parsed[38]
+            cdtextureindex = parsed[39]
+            cdoffsets = []
+            mdl.cdtextures = []
+
+            f.seek(cdtextureindex)
+            for i in range(0, numcdtextures):
+                data = f.read(offset.size)
+                cdoffsets.append(offset.unpack(data)[0])
+            for i in cdoffsets:
+                f.seek(i)
+                mdl.cdtextures.append(readcstr(f))
+
+            # skin table
+            numskinref = parsed[40]
+            numskinrfamilies = parsed[41]
+            skinindex = parsed[42]
+            skintable = []
+            tablelength = numskinref * numskinrfamilies
+            tableformat = 'h' * tablelength
+
+            f.seek(skinindex)
+            data = f.read(calcsize(tableformat))
+            parsed_data = unpack_from(tableformat, data)
+
+            mdl.skintable = [[0]*numskinref]*numskinrfamilies
+            for i in range(0, numskinrfamilies):
+                for j in range(0, numskinref):
+                    mdl.skintable[i][j] = parsed_data[numskinrfamilies*i + j]
 
             # mstudiobodyparts_t
             bodypart_count = parsed[43]
@@ -412,16 +453,21 @@ def make_mstudioikchain_t(data):
     return instance
 
 
+mstudiotexture_t = Struct('iiiiii10i')
+
+
 def make_mstudiotexture_t(data):
 
     instance = Mdl_mstudiotexture_t()
-    # int                     sznameindex;
-    # int                     flags;
-    # int                     used;
-    # int                     unused1;
-    # mutable IMaterial       *material;  // fixme: this needs to go away . .isn't used by the engine, but is used by studiomdl
-    # mutable void            *clientmaterial;    // gary, replace with client material pointer if used
-    # int                     unused[10];
+
+    instance.sznameindex = data[0]
+    instance.flags = data[1]
+    instance.used = data[2]
+    instance.unused1 = data[3]
+    instance.material = data[4]
+    instance.clientmaterial = data[5]
+    instance.unused = data[-10:]
+
     return instance
 
 
