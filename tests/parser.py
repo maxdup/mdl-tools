@@ -12,6 +12,8 @@ class ParseTestCase(unittest.TestCase):
         return
 
     def test_parse(self):
+        # mdl = MdlParse(
+        #    '/media/maxime/Work1/source_misc/allmodels/props_forest/rock004.mdl')
         mdl = MdlParse(
-            '/media/maxime/Work1/source_misc/allmodels/props_forest/rock004.mdl')
+            '/media/maxime/Work1/source_misc/allmodels/bots/heavy/bot_heavy.mdl')
         self.assertTrue(mdl)
