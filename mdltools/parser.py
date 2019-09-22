@@ -218,28 +218,30 @@ mstudioseqdesc_t = Struct(
 )
 
 mstudiobone_t = Struct(
+    'i' / Index,
+
     'sznameindex' / Int32sl,
     'parent' / Int32sl,
     'bonecontroller' / Int32sl[6],
-
     'pos' / Vector,
     'quat' / Quaternion,
     'rot' / RadianEuler,
-
     'posscale' / Vector,
     'rotscale' / Vector,
-
     'poseToBone' / matrix3x4_t,
     'qAlignment' / Quaternion,
-
     'flags' / Int32sl,
     'proctype' / Int32sl,
-    'procindex' / Int32sl,
+    'procindex' / Int32sl,  # todo
     'physicsbone' / Int32sl,
-
     'surfacepropidx' / Int32sl,
     'contents' / Int32sl,
     'unused' / Int32sl[8],
+
+    'name' / Pointer(this.sznameindex + this._.boneindex +
+                     (this.i * 216), CString('ascii')),
+    'surfaceprop' / Pointer(this.surfacepropidx + this._.boneindex +
+                            (this.i * 216), CString('ascii')),
 )
 
 mstudiolinearbone_t = Struct(
@@ -430,8 +432,6 @@ mstudioanimdesc_t = Struct(
                      (this.i * 96), CString('ascii')),
 )
 
-print(mstudioanimdesc_t.sizeof())
-
 mstudioautolayer_t = Struct(
     'iSequence' / Int16sl,
     'iPose' / Int16sl,
@@ -454,11 +454,6 @@ studiohdr2_t = Struct(
 )
 
 
-def treat(obj, ctx):
-    print(obj)
-    print(ctx)
-
-
 skinfamily = Array(this._.numskinref, Int16sl)
 skintable = Struct('families' / skinfamily[this._.numskinfamilies])
 studiohdr_t = Struct(
@@ -475,8 +470,8 @@ studiohdr_t = Struct(
     'view_bbmax' / Vector,
     'flags' / Int32sl,
 
-    'numbones' / Int32sl,
-    'boneindex' / Int32sl,
+    'numbones' / Int32sl,  # !ok
+    'boneindex' / Int32sl,  # !ok
 
     'RemapSeqBone' / Int32sl,  # todo?
     'RemapAnimBone' / Int32sl,  # todo?
@@ -486,7 +481,6 @@ studiohdr_t = Struct(
 
     'numbonecontrollers' / Int32sl,  # doesn't look right
     'bonecontrollerindex' / Int32sl,  # doesn't look right
-
 
     'numlocalanim' / Int32sl,
     'localanimindex' / Int32sl,
@@ -560,12 +554,12 @@ studiohdr_t = Struct(
     #'anims' / Pointer(this.localanimindex, mstudioanimdesc_t[this.numlocalanim])
     # 'bodyparts' / Pointer(this.bodypartindex,
     #                      mstudiobodyparts_t[this.numbodyparts]),
-    # 'bones' / Pointer(this.boneindex, mstudiobone_t[this.numbones]),
+    #'bones' / Pointer(this.boneindex, mstudiobone_t[this.numbones]),
 
     # 'bonecontrollers' / Pointer(this.bonecontrollerindex,
     #                            mstudiobonecontroller_t[this.numbonecontrollers]),
-    'hitboxsets' / Pointer(this.hitboxsetindex,
-                           mstudiohitboxset_t[this.numhitboxsets]),
+    # 'hitboxsets' / Pointer(this.hitboxsetindex,
+    #                       mstudiohitboxset_t[this.numhitboxsets]),
 
 )
 
@@ -575,5 +569,4 @@ def MdlParse(filename):
     with open(filename, "rb") as f:
         results = studiohdr_t.parse_stream(f)
         print(results)
-        print(studiohdr_t.sizeof())
     return mdl
