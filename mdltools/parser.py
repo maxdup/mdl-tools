@@ -120,9 +120,9 @@ mstudiomodel_t = Struct(
     'name' / PaddedString(64, "ascii"),
     'type' / Int32sl,
     'boundingradius' / Float32l,
-    # mstudiomesh_t
     'nummeshes' / Int32sl,
     'meshindex' / Int32sl,
+
     'numvertices' / Int32sl,
     'vertexindex' / Int32sl,
     'tangentsindex' / Int32sl,
@@ -132,9 +132,10 @@ mstudiomodel_t = Struct(
     'eyeballindex' / Int32sl,
     'unused' / Int32sl[10],
 
-    # 'meshes' / Pointer(this.meshindex + this._.modelindex + this._._.bodypartindex +
-    #                   (this.i*148), mstudiomesh_t[this.nummeshes]),
-    # 'eyeballs' Pointer(mstudioeyeball_t)
+    'meshes' / Pointer(this.meshindex + (this.i*148) +
+                       this._.modelindex + (this._.i*16) +
+                       this._._.bodypartindex, mstudiomesh_t[this.nummeshes]),
+    # todo: parse 'mstudioeyeball_t'
 )
 
 mstudiobodyparts_t = Struct(
@@ -315,12 +316,18 @@ mstudioevent_t = Struct(
 )
 
 mstudioattachment_t = Struct(
+    'i' / Index,
+
     'sznameindex' / Int32sl,
     'flags' / Int32ul,
     'localbone' / Int32sl,
     'local' / matrix3x4_t,
     'unused' / Int32sl[8],
+
+    'name' / Pointer(this.sznameindex + this._.localattachmentindex +
+                     (this.i * 92), CString('ascii')),
 )
+
 mstudioikchain_t = Struct(
     'sznameindex' / Int32sl,
     'linktype' / Int32sl,
@@ -473,14 +480,14 @@ studiohdr_t = Struct(
     'numbones' / Int32sl,  # !ok
     'boneindex' / Int32sl,  # !ok
 
-    'RemapSeqBone' / Int32sl,  # todo?
-    'RemapAnimBone' / Int32sl,  # todo?
+    'RemapSeqBone' / Int32sl,
+    'RemapAnimBone' / Int32sl,
 
     'numhitboxsets' / Int32sl,  # !ok
     'hitboxsetindex' / Int32sl,  # !ok
 
-    'numbonecontrollers' / Int32sl,  # doesn't look right
-    'bonecontrollerindex' / Int32sl,  # doesn't look right
+    'numbonecontrollers' / Int32sl,
+    'bonecontrollerindex' / Int32sl,
 
     'numlocalanim' / Int32sl,
     'localanimindex' / Int32sl,
@@ -495,11 +502,11 @@ studiohdr_t = Struct(
     'numskinref' / Int32sl,  # !ok
     'numskinfamilies' / Int32sl,  # !ok
     'skinindex' / Int32sl,  # !ok
+    'numbodyparts' / Int32sl,  # !ok
+    'bodypartindex' / Int32sl,  # !ok
+    'numlocalattachments' / Int32sl,  # !ok
+    'localattachmentindex' / Int32sl,  # !ok
 
-    'numbodyparts' / Int32sl,
-    'bodypartindex' / Int32sl,
-    'numlocalattachments' / Int32sl,
-    'localattachmentindex' / Int32sl,
     'numlocalnodes' / Int32sl,
     'localnodeindex' / Int32sl,
     'localnodenameindex' / Int32sl,
@@ -553,7 +560,9 @@ studiohdr_t = Struct(
     # 'skintable' / Pointer(this.skinindex, skintable)
     #'anims' / Pointer(this.localanimindex, mstudioanimdesc_t[this.numlocalanim])
     # 'bodyparts' / Pointer(this.bodypartindex,
-    #                      mstudiobodyparts_t[this.numbodyparts]),
+    #                       mstudiobodyparts_t[this.numbodyparts]),
+    # 'attachments' / Pointer(this.localattachmentindex,
+    #                        mstudioattachment_t[this.numlocalattachments]),
     #'bones' / Pointer(this.boneindex, mstudiobone_t[this.numbones]),
 
     # 'bonecontrollers' / Pointer(this.bonecontrollerindex,
