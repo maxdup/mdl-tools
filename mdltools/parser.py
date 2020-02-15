@@ -520,8 +520,8 @@ studiohdr_t = Struct(
     'ikchainindex' / Int32sl,
     'nummouths' / Int32sl,
     'mouthindex' / Int32sl,
-    'numlocalposeparameters' / Int32sl,
-    'localposeparamindex' / Int32sl,
+    'numlocalposeparameters' / Int32sl,  # !ok
+    'localposeparamindex' / Int32sl,  # !ok
     'surfacepropindex' / Int32sl,
     'keyvalueindex' / Int32sl,
     'keyvaluesize' / Int32sl,
@@ -551,25 +551,29 @@ studiohdr_t = Struct(
     'studiohdr2index' / Int32sl,
     'unused2' / Int32sl,
 
+    # these are good, they're commented for clearner output only
+    '''
+    'studiohdr2_t' / Pointer(this.studiohdr2index, studiohdr2_t),
+    'textures' / Pointer(this.textureindex,
+                         mstudiotexture_t[this.numtextures]),
+    'cdtextures' / Pointer(this.cdtextureindex,
+                           mstudiocdtexture_t[this.numcdtextures]),
+    'skintable' / Pointer(this.skinindex, skintable),
+    'anims' / Pointer(this.localanimindex,
+                      mstudioanimdesc_t[this.numlocalanim]),
+    'bodyparts' / Pointer(this.bodypartindex,
+                          mstudiobodyparts_t[this.numbodyparts]),
+    'attachments' / Pointer(this.localattachmentindex,
+                            mstudioattachment_t[this.numlocalattachments]),
+    'bones' / Pointer(this.boneindex, mstudiobone_t[this.numbones]),
 
-    # 'studiohdr2_t' / Pointer(this.studiohdr2index, studiohdr2_t),
-    # 'textures' / Pointer(this.textureindex,
-    # mstudiotexture_t[this.numtextures]),
-    # 'cdtextures' / Pointer(this.cdtextureindex,
-    #                      mstudiocdtexture_t[this.numcdtextures]),
-    # 'skintable' / Pointer(this.skinindex, skintable)
-    #'anims' / Pointer(this.localanimindex, mstudioanimdesc_t[this.numlocalanim])
-    # 'bodyparts' / Pointer(this.bodypartindex,
-    #                       mstudiobodyparts_t[this.numbodyparts]),
-    # 'attachments' / Pointer(this.localattachmentindex,
-    #                        mstudioattachment_t[this.numlocalattachments]),
-    #'bones' / Pointer(this.boneindex, mstudiobone_t[this.numbones]),
-
-    # 'bonecontrollers' / Pointer(this.bonecontrollerindex,
-    #                            mstudiobonecontroller_t[this.numbonecontrollers]),
-    # 'hitboxsets' / Pointer(this.hitboxsetindex,
-    #                       mstudiohitboxset_t[this.numhitboxsets]),
-
+    'bonecontrollers' / Pointer(this.bonecontrollerindex,
+                                mstudiobonecontroller_t[this.numbonecontrollers]),
+    'hitboxsets' / Pointer(this.hitboxsetindex,
+                           mstudiohitboxset_t[this.numhitboxsets]),
+    '''
+    'localposeparam' / Pointer(this.localposeparamindex,
+                               mstudioposeparamdesc_t[this.numlocalposeparameters])
 )
 
 
