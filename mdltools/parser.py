@@ -159,11 +159,17 @@ mstudiomouth_t = Struct(
 )
 
 mstudioposeparamdesc_t = Struct(
+    'i' / Index,
+
     'sznameindex' / Int32sl,
     'flags' / Int32sl,
     'start' / Float32l,
     'end' / Float32l,
     'loop' / Float32l,
+
+    'name' / Pointer(this.sznameindex + this._.localposeparamindex +
+                     (this.i*20), CString('ascii')),
+
 )
 
 mstudiomovement_t = Struct(
@@ -328,11 +334,24 @@ mstudioattachment_t = Struct(
                      (this.i * 92), CString('ascii')),
 )
 
+mstudioiklink_t = Struct(
+    'bone' / Int32sl,
+    'kneeDir' / Vector,
+    'unused0' / Vector,
+)
+
 mstudioikchain_t = Struct(
+    'i' / Index,
+
     'sznameindex' / Int32sl,
     'linktype' / Int32sl,
     'numlinks' / Int32sl,
     'linkindex' / Int32sl,
+
+    'name' / Pointer(this.sznameindex + this._.ikchainindex +
+                     (this.i * 16), CString('ascii')),
+    'links' / Pointer(this.linkindex + this._.ikchainindex +
+                      (this.i * 16), mstudioiklink_t[this.numlinks])
 )
 
 mstudioiklock_t = Struct(
@@ -516,8 +535,8 @@ studiohdr_t = Struct(
     'flexcontrollerindex' / Int32sl,
     'numflexrules' / Int32sl,
     'flexruleindex' / Int32sl,
-    'numikchains' / Int32sl,
-    'ikchainindex' / Int32sl,
+    'numikchains' / Int32sl,  # !ok
+    'ikchainindex' / Int32sl,  # !ok
     'nummouths' / Int32sl,
     'mouthindex' / Int32sl,
     'numlocalposeparameters' / Int32sl,  # !ok
@@ -529,7 +548,7 @@ studiohdr_t = Struct(
     'localikautoplaylockindex' / Int32sl,
     'mass' / Float32l,
     'contents' / Int32sl,
-    'numincludemodels' / Int32sl,
+    'numincludemodels' / Int32sl,  # 1
     'includemodelindex' / Int32sl,
     'szanimblocknameindex' / Int32sl,
     'numanimblocks' / Int32sl,
@@ -571,9 +590,11 @@ studiohdr_t = Struct(
                                 mstudiobonecontroller_t[this.numbonecontrollers]),
     'hitboxsets' / Pointer(this.hitboxsetindex,
                            mstudiohitboxset_t[this.numhitboxsets]),
+    'localposeparams' / Pointer(this.localposeparamindex,
+                                mstudioposeparamdesc_t[this.numlocalposeparameters])
     '''
-    'localposeparam' / Pointer(this.localposeparamindex,
-                               mstudioposeparamdesc_t[this.numlocalposeparameters])
+    'ikchains' / Pointer(this.ikchainindex,
+                         mstudioikchain_t[this.numikchains])
 )
 
 
