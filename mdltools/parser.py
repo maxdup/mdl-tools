@@ -184,7 +184,7 @@ mstudiomovement_t = Struct(
 
 mstudioseqdesc_t = Struct(
     'baseptr' / Int32sl,
-    'szlabelindex' / Int32sl,
+    'szlabelindex' / Int32sl,  # todo?
     'szactivitynameindex' / Int32sl,
     'flags' / Int32sl,
     'activity' / Int32sl,
@@ -468,6 +468,15 @@ mstudioautolayer_t = Struct(
     'end' / Float32l,
 )
 
+mstudiomodelgroup_t = Struct(
+    'i' / Index,
+    'szlabelindex' / Int32sl,  # todo?
+    'sznameindex' / Int32sl,
+
+    'name' / Pointer(this.sznameindex + this._.includemodelindex +
+                     (this.i * 8), CString('ascii')),
+)
+
 studiohdr2_t = Struct(
     'numsrcbonetransform' / Int32sl,
     'srcbonetransformindex' / Int32sl,
@@ -505,10 +514,10 @@ studiohdr_t = Struct(
     'numhitboxsets' / Int32sl,  # !ok
     'hitboxsetindex' / Int32sl,  # !ok
 
-    'numbonecontrollers' / Int32sl,
+    'numbonecontrollers' / Int32sl,  # todo
     'bonecontrollerindex' / Int32sl,
 
-    'numlocalanim' / Int32sl,
+    'numlocalanim' / Int32sl,  # todo
     'localanimindex' / Int32sl,
 
     'numlocalseq' / Int32sl,
@@ -548,8 +557,8 @@ studiohdr_t = Struct(
     'localikautoplaylockindex' / Int32sl,
     'mass' / Float32l,
     'contents' / Int32sl,
-    'numincludemodels' / Int32sl,  # 1
-    'includemodelindex' / Int32sl,
+    'numincludemodels' / Int32sl,  # !ok
+    'includemodelindex' / Int32sl,  # !ok
     'szanimblocknameindex' / Int32sl,
     'numanimblocks' / Int32sl,
     'animblockindex' / Int32sl,
@@ -571,30 +580,30 @@ studiohdr_t = Struct(
     'unused2' / Int32sl,
 
     # these are good, they're commented for clearner output only
-    '''
     'studiohdr2_t' / Pointer(this.studiohdr2index, studiohdr2_t),
     'textures' / Pointer(this.textureindex,
                          mstudiotexture_t[this.numtextures]),
     'cdtextures' / Pointer(this.cdtextureindex,
                            mstudiocdtexture_t[this.numcdtextures]),
     'skintable' / Pointer(this.skinindex, skintable),
-    'anims' / Pointer(this.localanimindex,
-                      mstudioanimdesc_t[this.numlocalanim]),
+
     'bodyparts' / Pointer(this.bodypartindex,
                           mstudiobodyparts_t[this.numbodyparts]),
     'attachments' / Pointer(this.localattachmentindex,
                             mstudioattachment_t[this.numlocalattachments]),
     'bones' / Pointer(this.boneindex, mstudiobone_t[this.numbones]),
-
     'bonecontrollers' / Pointer(this.bonecontrollerindex,
                                 mstudiobonecontroller_t[this.numbonecontrollers]),
     'hitboxsets' / Pointer(this.hitboxsetindex,
                            mstudiohitboxset_t[this.numhitboxsets]),
     'localposeparams' / Pointer(this.localposeparamindex,
-                                mstudioposeparamdesc_t[this.numlocalposeparameters])
-    '''
+                                mstudioposeparamdesc_t[this.numlocalposeparameters]),
     'ikchains' / Pointer(this.ikchainindex,
-                         mstudioikchain_t[this.numikchains])
+                         mstudioikchain_t[this.numikchains]),
+    'includemodels' / Pointer(this.includemodelindex,
+                              mstudiomodelgroup_t[this.numincludemodels]),
+    'anims' / Pointer(this.localanimindex,
+                      mstudioanimdesc_t[this.numlocalanim]),
 )
 
 
