@@ -6,10 +6,10 @@ from future import standard_library
 standard_library.install_aliases()
 
 
-class Vvd(object):
-    """Contains all the vertex data from a Vvd file."""
+class Phy(object):
+    """Contains all the collision data from a phy file."""
 
     def __init__(self):
-        """Creates an empty instance of Vvd."""
+        """Creates an empty instance of Phy."""
 
         self.id = None

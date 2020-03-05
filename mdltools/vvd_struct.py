@@ -28,12 +28,9 @@ vertexFileFixup_t = Struct(
 )
 
 vertexFileHeader_t = Struct(
-    'id' / Bytes(4),
-    'version' / Int32sl,
+    'id' / Const(b'IDSV'),
+    'version' / Const(4, Int32sl),
     'checksum' / Int32sl,
-
-    'checkId' / Check(this.id == b'IDSV'),
-    'checkVersion' / Check(this.version == 4),
 
     'numLODs' / Int32sl,
     'numLODVertexes' / Int32sl[MAX_NUM_LODS],

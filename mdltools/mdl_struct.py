@@ -465,12 +465,9 @@ skinfamily = Array(this._.numskinref, Int16sl)
 skintable = Struct('families' / skinfamily[this._.numskinfamilies])
 
 studiohdr_t = Struct(
-    'id' / Bytes(4),
-    'version' / Int32sl,
+    'id' / Const(b'IDST'),
+    'version' / Const(48, Int32sl),
     'checksum' / Int32sl,
-
-    'checkId' / Check(this.id == b'IDST'),
-    'checkVersion' / Check(this.version == 48),
 
     'name' / PaddedString(64, "ascii"),
     'dataLength' / Int32sl,
