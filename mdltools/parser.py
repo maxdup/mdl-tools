@@ -11,11 +11,15 @@ from future import standard_library
 standard_library.install_aliases()
 
 from construct import *  # NOQA: E402
+
 from .mdl import *  # NOQA: E402
 from .vvd import *  # NOQA: E402
+from .vtx import *  # NOQA: E402
 from .phy import *  # NOQA: E402
+
 from .mdl_struct import *  # NOQA: E402
 from .vvd_struct import *  # NOQA: E402
+from .vtx_struct import *  # NOQA: E402
 from .phy_struct import *  # NOQA: E402
 
 
@@ -50,3 +54,14 @@ def PhyParse(filename):
         except Exception as e:
             print(e)
     return phy
+
+
+def VtxParse(filename):
+    vtx = Vtx()
+    with open(filename, "rb") as f:
+        try:
+            results = vtxheader_t.parse_stream(f)
+            # print(results)
+        except Exception as e:
+            print(e)
+    return vtx
